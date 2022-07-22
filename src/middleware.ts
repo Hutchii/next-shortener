@@ -1,24 +1,29 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  // if (req.nextUrl.pathname.startsWith("/api/get-url")) {
-  //   console.log("Returning early from /api/get-url");
-  //   return;
-  // }
-
-  console.log("Middleware", req.nextUrl.pathname);
+  console.log("PATH", req.nextUrl.pathname);
+  if (
+    req.nextUrl.pathname === "/" ||
+    req.nextUrl.pathname.startsWith("/api/")
+  ) {
+    console.log("Test");
+    return;
+  }
 
   const slug = req.nextUrl.pathname.split("/").pop();
-  //We can`t call PRISMA in here because this runs on the cloudflare edge in ther VE Runtime that isnt a native box so we cant use PRISMA because PRISMA uses rust uder the hood. We have to fetch from our own endpoint.
-
+  console.log("Test2");
   const data = await (
     await fetch(`${req.nextUrl.origin}/api/get-url/${slug}`)
   ).json();
 
-  console.log("Data", data);
+  // console.log("Data", data);
 
   if (data?.url) {
     return NextResponse.redirect(data.url);
   }
 }
+
+// export const config = {
+//   matcher: "/:path*",
+// };
