@@ -23,7 +23,7 @@ const CreateLinkForm: NextPage = () => {
   const createSlug = trpc.useMutation(["createSlug"]);
 
   const input =
-    "text-black my-1 p-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-pink-500 focus:ring-pink-500 block w-full rounded-md sm:text-sm focus:ring-1";
+    "my-2 text-lg text-gray-650 px-3 bg-gray-850 border shadow-sm border-gray-750 placeholder-gray-650 focus:outline-none focus:border-lime-450 block w-full h-10";
 
   const slugInput = classNames(input, {
     "border-red-500": slugCheck.isFetched && slugCheck.data!.used,
@@ -63,15 +63,10 @@ const CreateLinkForm: NextPage = () => {
         e.preventDefault();
         createSlug.mutate({ ...form });
       }}
-      className="flex flex-col justify-center h-screen sm:w-2/3 md:w-1/2 lg:w-1/3"
+      className="sm:flex sm:flex-col sm:gap-3 w-1/4"
     >
-      {slugCheck.data?.used && (
-        <span className="font-medium mr-2 text-center text-red-500">
-          Slug already in use.
-        </span>
-      )}
-      <div className="flex items-center">
-        <span className="font-medium mr-2">{url}/</span>
+      <div className="sm:flex sm:items-center sm:gap-2">
+        <span className="font-normal text-xl">{url}/</span>
         <input
           type="text"
           onChange={(e) => {
@@ -82,7 +77,7 @@ const CreateLinkForm: NextPage = () => {
             debounce(slugCheck.refetch, 100);
           }}
           minLength={1}
-          placeholder="rothaniel"
+          placeholder="short name"
           className={slugInput}
           value={form.slug}
           pattern={"^[-a-zA-Z0-9]+$"}
@@ -92,7 +87,7 @@ const CreateLinkForm: NextPage = () => {
         <input
           type="button"
           value="Random"
-          className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
           onClick={() => {
             const slug = nanoid();
             setForm({
@@ -102,13 +97,16 @@ const CreateLinkForm: NextPage = () => {
             slugCheck.refetch();
           }}
         />
+        <span className="font-medium text-red-500 h-6 block mt-2">
+          {slugCheck.data?.used ? "Slug already in use." : null}
+        </span>
       </div>
-      <div className="flex items-center">
-        <span className="font-medium mr-2">Link</span>
+      <div className="sm:flex sm:items-center sm:gap-2">
+        <span className="font-normal text-xl">Link:</span>
         <input
           type="url"
           onChange={(e) => setForm({ ...form, url: e.target.value })}
-          placeholder="https://google.com"
+          placeholder="https://example.com"
           className={input}
           required
         />
@@ -116,7 +114,7 @@ const CreateLinkForm: NextPage = () => {
       <input
         type="submit"
         value="Create"
-        className="rounded bg-pink-500 p-1 font-bold cursor-pointer mt-1"
+        className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
         disabled={slugCheck.isFetched && slugCheck.data!.used}
       />
     </form>
