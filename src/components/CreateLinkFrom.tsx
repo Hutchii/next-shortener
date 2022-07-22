@@ -13,7 +13,7 @@ type Form = {
 
 const CreateLinkForm: NextPage = () => {
   const [form, setForm] = useState<Form>({ slug: "", url: "" });
-  const url = window.location.origin;
+  const url = window.location.origin.split("//")[1];
 
   const slugCheck = trpc.useQuery(["slugCheck", { slug: form.slug }], {
     refetchOnReconnect: false, // replacement for enable: false which isn't respected.
@@ -33,12 +33,12 @@ const CreateLinkForm: NextPage = () => {
   if (createSlug.status === "success") {
     return (
       <>
-        <div className="flex justify-center items-center">
-          <h1>{`${url}/${form.slug}`}</h1>
+        <div className="md:flex md:items-center md:gap-4 w-full md:w-[unset]">
+          <h1 className="font-normal text-xl mb-2 md:mb-0">{`${window.location.origin}/${form.slug}`}</h1>
           <input
             type="button"
             value="Copy Link"
-            className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer ml-2"
+            className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
             onClick={() => {
               copy(`${url}/${form.slug}`);
             }}
@@ -46,8 +46,8 @@ const CreateLinkForm: NextPage = () => {
         </div>
         <input
           type="button"
-          value="Reset"
-          className="rounded bg-pink-500 py-1.5 px-1 font-bold cursor-pointer m-5"
+          value="Go back"
+          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mr-auto md:mr-0"
           onClick={() => {
             createSlug.reset();
             setForm({ slug: "", url: "" });
@@ -63,9 +63,9 @@ const CreateLinkForm: NextPage = () => {
         e.preventDefault();
         createSlug.mutate({ ...form });
       }}
-      className="sm:flex sm:flex-col sm:gap-3 w-1/4"
+      className="md:flex md:flex-col md:gap-3 w-full lg:w-3/4 2xl:w-1/2 3xl:w-2/5"
     >
-      <div className="sm:flex sm:items-center sm:gap-2">
+      <div className="md:flex md:items-center md:gap-2">
         <span className="font-normal text-xl">{url}/</span>
         <input
           type="text"
@@ -97,11 +97,8 @@ const CreateLinkForm: NextPage = () => {
             slugCheck.refetch();
           }}
         />
-        <span className="font-medium text-red-500 h-6 block mt-2">
-          {slugCheck.data?.used ? "Slug already in use." : null}
-        </span>
       </div>
-      <div className="sm:flex sm:items-center sm:gap-2">
+      <div className="md:flex md:items-center md:gap-2">
         <span className="font-normal text-xl">Link:</span>
         <input
           type="url"
@@ -117,6 +114,9 @@ const CreateLinkForm: NextPage = () => {
         className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
         disabled={slugCheck.isFetched && slugCheck.data!.used}
       />
+      <span className="font-medium text-red-500 h-6 block mt-2">
+        {slugCheck.data?.used ? "Slug already in use." : null}
+      </span>
     </form>
   );
 };
