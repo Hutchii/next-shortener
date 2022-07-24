@@ -42,22 +42,13 @@ const CreateLinkForm: NextPage = () => {
     "my-2 text-lg text-gray-650 px-3 bg-gray-850 border shadow-sm border-gray-750 placeholder-gray-650 focus:outline-none focus:border-lime-450 block w-full h-10";
 
   console.log(form);
-  if (createSlug.status === "success") {
+  if (createSlug.status === "idle") {
     return (
       <>
         <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
         <button
           type="button"
-          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mr-4"
-          onClick={() => {
-            copy(`https://shortn-ten.vercel.app/${form.slug.value}`);
-          }}
-        >
-          Copy link
-        </button>
-        <button
-          type="button"
-          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
+          className="text-md font-medium border border-lime-450 px-5 cursor-pointer text-white h-10 hover:bg-lime-550 transition ease-in duration-75 mr-4"
           onClick={() => {
             setForm({
               slug: { ...form.slug, value: "", error: "", isTouched: false },
@@ -67,6 +58,15 @@ const CreateLinkForm: NextPage = () => {
           }}
         >
           Go back
+        </button>
+        <button
+          type="button"
+          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
+          onClick={() => {
+            copy(`https://shortn-ten.vercel.app/${form.slug.value}`);
+          }}
+        >
+          Copy link
         </button>
       </>
     );
