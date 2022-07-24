@@ -42,7 +42,6 @@ const CreateLinkForm: NextPage = () => {
     "my-2 text-lg text-gray-650 px-3 bg-gray-850 border shadow-sm border-gray-750 placeholder-gray-650 focus:outline-none focus:border-lime-450 block w-full h-10";
 
   console.log(form);
-
   if (createSlug.status === "success") {
     return (
       <>
@@ -60,8 +59,11 @@ const CreateLinkForm: NextPage = () => {
           type="button"
           className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
           onClick={() => {
+            setForm({
+              slug: { ...form.slug, value: "", error: "", isTouched: false },
+              url: { ...form.url, value: "", error: "", isTouched: false },
+            });
             createSlug.reset();
-            setForm(formInitial);
           }}
         >
           Go back
@@ -69,6 +71,10 @@ const CreateLinkForm: NextPage = () => {
       </>
     );
   }
+  // {
+  //   slug: { ...form.slug, value: "", error: "", isTouched: false },
+  //   url: { ...form.url, value: "", error: "", isTouched: false },
+  // }
   return (
     <form
       onSubmit={(e) => {
