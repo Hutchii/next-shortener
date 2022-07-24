@@ -48,7 +48,7 @@ const CreateLinkForm: NextPage = () => {
         <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
         <button
           type="button"
-          className="text-md font-medium border border-lime-450 px-5 cursor-pointer text-white h-10 hover:bg-lime-550 transition ease-in duration-75 mr-4"
+          className="text-md font-medium border border-lime-450 px-5 cursor-pointer text-white h-10 hover:opacity-95 transition ease-in duration-75 mr-4"
           onClick={() => {
             setForm({
               slug: { ...form.slug, value: "", error: "", isTouched: false },
