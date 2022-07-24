@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         <h1 className="text-3xl sm:text-4xl tracking-tight font-normal animate-fade-in">
           Link shortener
         </h1>
-        <p className="text-gray-650 text-lg mt-3 mb-20 animate-fade-in">
+        <p className="text-gray-650 text-lg mt-3 mb-14 animate-fade-in">
           Tool to shorten a URL or reduce a link. Made using Next.js, Tailwind,
           Prisma and trpc. Uses Next.js middleware and API Routes.
         </p>

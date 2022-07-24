@@ -44,7 +44,10 @@ const CreateLinkForm: NextPage = () => {
   if (createSlug.status === "success") {
     return (
       <div className="animate-fade-in h-80 md:h-56">
-        <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
+        <h1 className="text-xl sm:text-2xl mb-2">Your shortened URL:</h1>
+        <p className="font-normal text-xl mb-8">
+          {process.env.NEXT_PUBLIC_URL + form.slug.value}
+        </p>
         <button
           type="button"
           className="text-md font-medium border border-lime-450 px-5 cursor-pointer text-white h-10 hover:opacity-95 transition ease-in duration-75 mr-4"
@@ -62,7 +65,7 @@ const CreateLinkForm: NextPage = () => {
           type="button"
           className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
           onClick={() => {
-            copy(`https://shortn-ten.vercel.app/${form.slug.value}`);
+            copy(process.env.NEXT_PUBLIC_URL + form.slug.value);
           }}
         >
           Copy link
@@ -90,7 +93,7 @@ const CreateLinkForm: NextPage = () => {
       <div>
         <div className="md:flex md:items-center md:gap-2">
           <span className="font-normal text-xl whitespace-nowrap">
-            shortn-ten.vercel.app/
+            {process.env.NEXT_PUBLIC_URL}
           </span>
           <input
             type="text"
@@ -185,7 +188,7 @@ const CreateLinkForm: NextPage = () => {
         disabled={
           (slugCheck.isFetched && slugCheck.data!.used) ||
           (Boolean(form.slug.error) && form.slug.isTouched) ||
-          (Boolean(form.url.error)  && form.url.isTouched)
+          (Boolean(form.url.error) && form.url.isTouched)
         }
       >
         Create
