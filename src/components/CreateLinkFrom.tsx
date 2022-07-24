@@ -41,8 +41,7 @@ const CreateLinkForm: NextPage = () => {
   const input =
     "my-2 text-lg text-gray-650 px-3 bg-gray-850 border shadow-sm border-gray-750 placeholder-gray-650 focus:outline-none focus:border-lime-450 block w-full h-10";
 
-  console.log(form);
-  if (createSlug.status === "idle") {
+  if (createSlug.status === "success") {
     return (
       <>
         <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
