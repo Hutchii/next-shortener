@@ -26,7 +26,6 @@ export const appRouter = trpc
           .min(1)
           .regex(/^[-a-zA-Z0-9]+$/),
       }),
-
       url: z.object({
         value: z
           .string()

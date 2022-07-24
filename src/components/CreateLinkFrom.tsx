@@ -27,7 +27,7 @@ const CreateLinkForm: NextPage = () => {
     slug: { value: "", isTouched: false, error: "", validationRule: shortName },
     url: { value: "", isTouched: false, error: "", validationRule: urlPath },
   });
-  const url = window.location.origin.split("//")[1];
+  // const url = window.location.origin.split("//")[1];
 
   const slugCheck = trpc.useQuery(["slugCheck", { slug: form.slug.value }], {
     refetchOnReconnect: false,
@@ -97,7 +97,7 @@ const CreateLinkForm: NextPage = () => {
     >
       <div>
         <div className="md:flex md:items-center md:gap-2">
-          <span className="font-normal text-xl whitespace-nowrap">{url}/</span>
+          <span className="font-normal text-xl whitespace-nowrap">shortn-ten.vercel.app/</span>
           <input
             type="text"
             onBlur={() => {
