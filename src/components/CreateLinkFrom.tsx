@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid";
-import debounce from "lodash/debounce";
 import { trpc } from "../utils/trpc";
 import copy from "copy-to-clipboard";
 import { slugValidator, urlValidator } from "../utils/validationRules";
@@ -60,11 +59,11 @@ const CreateLinkForm: NextPage = () => {
           type="button"
           className="text-md font-medium border border-lime-450 px-5 cursor-pointer text-white h-10 hover:opacity-95 transition ease-in duration-75 mr-4"
           onClick={() => {
+            createSlug.reset(); //Resetting createSlug status to "idle"
             setForm({
               slug: { ...form.slug, value: "", error: "", isTouched: false },
               url: { ...form.url, value: "", error: "", isTouched: false },
             });
-            createSlug.reset(); //Resetting createSlug status to "idle"
           }}
         >
           Go back
@@ -119,7 +118,6 @@ const CreateLinkForm: NextPage = () => {
                   error: form.slug.validationRule(e.target.value),
                 },
               });
-              // debounce(slugCheck.refetch, 100);
               slugCheck.refetch;
             }}
             placeholder="short name"

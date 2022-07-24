@@ -1,6 +1,4 @@
 import type { NextPage } from "next";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
 import CreateLinkForm from "../components/CreateLinkFrom";
 
 // const CreateLinkForm = dynamic(() => import("../components/CreateLinkFrom"), {

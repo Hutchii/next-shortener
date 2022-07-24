@@ -25,7 +25,7 @@ export const appRouter = trpc
         value: z.string().min(1).regex(slugRegex),
       }),
       url: z.object({
-        value: z.string().min(1).regex(urlRegex),
+        value: z.string().regex(urlRegex),
       }),
     }),
     async resolve({ input }) {
@@ -36,9 +36,7 @@ export const appRouter = trpc
             url: input.url.value,
           },
         });
-      } catch (e) {
-        // console.log(e.message);
-      }
+      } catch (e) {}
     },
   });
 
