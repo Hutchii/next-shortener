@@ -20,8 +20,21 @@ export const appRouter = trpc
   })
   .mutation("createSlug", {
     input: z.object({
-      slug: z.object({ value: z.string().min(1) }),
-      url: z.object({ value: z.string().min(1) }),
+      slug: z.object({
+        value: z
+          .string()
+          .min(1)
+          .regex(/^[-a-zA-Z0-9]+$/),
+      }),
+
+      url: z.object({
+        value: z
+          .string()
+          .min(1)
+          .regex(
+            /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/
+          ),
+      }),
     }),
     async resolve({ input }) {
       try {

@@ -46,6 +46,15 @@ const CreateLinkForm: NextPage = () => {
   // });
 
   // if (createSlug.status === "success") {
+  //   // setForm({
+  //   //   slug: {
+  //   //     value: "",
+  //   //     isTouched: false,
+  //   //     error: "",
+  //   //     validationRule: shortName,
+  //   //   },
+  //   //   url: { value: "", isTouched: false, error: "", validationRule: urlPath },
+  //   // });
   //   return (
   //     <>
   //       <div className="md:flex md:items-center md:gap-4 w-full md:w-[unset]">
@@ -63,10 +72,10 @@ const CreateLinkForm: NextPage = () => {
   //         type="button"
   //         value="Go back"
   //         className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mr-auto md:mr-0"
-  //         onClick={() => {
-  //           createSlug.reset();
-  //           setForm({ slug: "", url: "" });
-  //         }}
+  //         // onClick={() => {
+  //         //   createSlug.reset();
+  //         //   setForm({ slug: "", url: "" });
+  //         // }}
   //       />
   //     </>
   //   );
@@ -81,12 +90,8 @@ const CreateLinkForm: NextPage = () => {
           formObj.isTouched = true;
           setForm({ ...form, [key]: formObj });
         }
-        // slugCheck.refetch;
-        // {...form[key: string], error: errorMessage}
-        // if (!form.slug.value.match("^[-a-zA-Z0-9]+$"))
-        //   setForm({ ...form, slug: { ...form.slug, error: true } });
-        // createSlug.mutate({ ...form });
-        // if (createSlug.status === "success") setForm({ ...form, slug: { ...form.slug, error: false } });
+        createSlug.mutate({ ...form });
+        console.log(createSlug.status);
       }}
       className="md:flex md:flex-col w-full"
     >
@@ -128,17 +133,24 @@ const CreateLinkForm: NextPage = () => {
               const slug = nanoid();
               setForm({
                 ...form,
-                slug: { ...form.slug, value: slug, isTouched: true },
+                slug: {
+                  ...form.slug,
+                  value: slug,
+                  isTouched: true,
+                  error: form.slug.validationRule(slug),
+                },
               });
               debounce(slugCheck.refetch, 100);
             }}
-          >Random</button>
+          >
+            Random
+          </button>
         </div>
-        <span className="font-medium text-red-500 h-6 block">
+        <span className="font-medium text-red-500 mt-1 md:-mt-1 h-[28px] md:h-6 block">
           {form.slug.isTouched && form.slug.error}
           {form.slug.value !== "" && form.slug.isTouched && slugCheck.data?.used
             ? "Slug already in use"
-            : null}
+            : ""}
         </span>
       </div>
       <div>
@@ -158,7 +170,7 @@ const CreateLinkForm: NextPage = () => {
                 url: {
                   ...form.url,
                   value: e.target.value,
-                  error: form.slug.validationRule(e.target.value),
+                  error: form.url.validationRule(e.target.value),
                 },
               })
             }
@@ -174,7 +186,7 @@ const CreateLinkForm: NextPage = () => {
       </div>
       <button
         type="submit"
-        className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 md:mt-2"
+        className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mt-2 md:mt-3 w-full"
         // disabled={slugCheck.isFetched && slugCheck.data!.used}
       >
         Create
