@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
 import { prisma } from "../../../db/client";
-import { nameRegex, urlRegex } from "../../../utils/validationRules";
+import { slugRegex, urlRegex } from "../../../utils/validationRules";
 
 export const appRouter = trpc
   .router()
@@ -22,7 +22,7 @@ export const appRouter = trpc
   .mutation("createSlug", {
     input: z.object({
       slug: z.object({
-        value: z.string().min(1).regex(nameRegex),
+        value: z.string().min(1).regex(slugRegex),
       }),
       url: z.object({
         value: z.string().min(1).regex(urlRegex),

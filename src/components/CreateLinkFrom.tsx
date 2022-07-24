@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import debounce from "lodash/debounce";
 import { trpc } from "../utils/trpc";
 import copy from "copy-to-clipboard";
-import { shortName, urlPath } from "../utils/validationRules";
+import { slugValidator, urlValidator } from "../utils/validationRules";
 
 type Form = {
   slug: {
@@ -21,13 +21,21 @@ type Form = {
   };
 };
 
-const formInitial = {
-  slug: { value: "", isTouched: false, error: "", validationRule: shortName },
-  url: { value: "", isTouched: false, error: "", validationRule: urlPath },
-};
-
 const CreateLinkForm: NextPage = () => {
-  const [form, setForm] = useState<Form>(formInitial);
+  const [form, setForm] = useState<Form>({
+    slug: {
+      value: "",
+      isTouched: false,
+      error: "",
+      validationRule: slugValidator,
+    },
+    url: {
+      value: "",
+      isTouched: false,
+      error: "",
+      validationRule: urlValidator,
+    },
+  });
   // const url = window.location.origin.split("//")[1];
 
   const slugCheck = trpc.useQuery(["slugCheck", { slug: form.slug.value }], {
@@ -56,7 +64,7 @@ const CreateLinkForm: NextPage = () => {
               slug: { ...form.slug, value: "", error: "", isTouched: false },
               url: { ...form.url, value: "", error: "", isTouched: false },
             });
-            createSlug.reset();
+            createSlug.reset(); //Resetting createSlug status to "idle"
           }}
         >
           Go back
@@ -73,7 +81,6 @@ const CreateLinkForm: NextPage = () => {
       </div>
     );
   }
-
   return (
     <form
       onSubmit={(e) => {
@@ -112,7 +119,8 @@ const CreateLinkForm: NextPage = () => {
                   error: form.slug.validationRule(e.target.value),
                 },
               });
-              debounce(slugCheck.refetch, 100);
+              // debounce(slugCheck.refetch, 100);
+              slugCheck.refetch;
             }}
             placeholder="short name"
             className={`${input} ${
@@ -184,14 +192,90 @@ const CreateLinkForm: NextPage = () => {
       </div>
       <button
         type="submit"
-        className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mt-2 md:mt-3 w-full"
+        className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mt-2 md:mt-3 w-full relative"
         disabled={
           (slugCheck.isFetched && slugCheck.data!.used) ||
           (Boolean(form.slug.error) && form.slug.isTouched) ||
           (Boolean(form.url.error) && form.url.isTouched)
         }
       >
-        Create
+        {createSlug.status === "idle" && "Create"}
+        {createSlug.status === "loading" && (
+          <svg
+            width="120"
+            height="16"
+            viewBox="0 0 120 30"
+            xmlns="http://www.w3.org/2000/svg"
+            className="fill-gray-950 absolute top-3 left-1/2 bottom-2/4 translate-x-[-50%] animate-fade-in"
+          >
+            <circle cx="15" cy="15" r="15">
+              <animate
+                attributeName="r"
+                from="15"
+                to="15"
+                begin="0s"
+                dur="0.8s"
+                values="15;9;15"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="fill-opacity"
+                from="1"
+                to="1"
+                begin="0s"
+                dur="0.8s"
+                values="1;.5;1"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle cx="60" cy="15" r="9" fillOpacity="0.3">
+              <animate
+                attributeName="r"
+                from="9"
+                to="9"
+                begin="0s"
+                dur="0.8s"
+                values="9;15;9"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="fill-opacity"
+                from="0.5"
+                to="0.5"
+                begin="0s"
+                dur="0.8s"
+                values=".5;1;.5"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle cx="105" cy="15" r="15">
+              <animate
+                attributeName="r"
+                from="15"
+                to="15"
+                begin="0s"
+                dur="0.8s"
+                values="15;9;15"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="fill-opacity"
+                from="1"
+                to="1"
+                begin="0s"
+                dur="0.8s"
+                values="1;.5;1"
+                calcMode="linear"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </svg>
+        )}
       </button>
     </form>
   );
