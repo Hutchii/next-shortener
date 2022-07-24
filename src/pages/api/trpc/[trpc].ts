@@ -24,14 +24,14 @@ export const appRouter = trpc
         value: z
           .string()
           .min(1)
-          .regex(/^[-a-zA-Z0-9]+$/),
+          .regex(/^[-a-zA-Z0-9_]+$/),
       }),
       url: z.object({
         value: z
           .string()
           .min(1)
           .regex(
-            /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/
+            /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?$/
           ),
       }),
     }),

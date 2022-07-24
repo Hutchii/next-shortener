@@ -70,10 +70,7 @@ const CreateLinkForm: NextPage = () => {
       </>
     );
   }
-  // {
-  //   slug: { ...form.slug, value: "", error: "", isTouched: false },
-  //   url: { ...form.url, value: "", error: "", isTouched: false },
-  // }
+
   return (
     <form
       onSubmit={(e) => {
@@ -116,7 +113,7 @@ const CreateLinkForm: NextPage = () => {
             }}
             placeholder="short name"
             className={`${input} ${
-              (form.slug.error ||
+              ((form.slug.error && form.slug.isTouched) ||
                 (slugCheck.isFetched && slugCheck.data!.used)) &&
               "border-red-500 focus:border-red-500"
             }`}
@@ -173,7 +170,9 @@ const CreateLinkForm: NextPage = () => {
             }
             placeholder="https://example.com"
             className={`${input} ${
-              form.url.error && "border-red-500 focus:border-red-500"
+              form.url.error &&
+              form.url.isTouched &&
+              "border-red-500 focus:border-red-500"
             }`}
           />
         </div>
@@ -184,7 +183,11 @@ const CreateLinkForm: NextPage = () => {
       <button
         type="submit"
         className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mt-2 md:mt-3 w-full"
-        // disabled={slugCheck.isFetched && slugCheck.data!.used}
+        disabled={
+          (slugCheck.isFetched && slugCheck.data!.used) ||
+          Boolean(form.slug.error) ||
+          Boolean(form.url.error)
+        }
       >
         Create
       </button>
