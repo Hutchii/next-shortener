@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
-import classNames from "classnames";
 import { nanoid } from "nanoid";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { trpc } from "../utils/trpc";
 import copy from "copy-to-clipboard";
 import { shortName, urlPath } from "../utils/validationRules";
@@ -22,64 +21,54 @@ type Form = {
   };
 };
 
+const formInitial = {
+  slug: { value: "", isTouched: false, error: "", validationRule: shortName },
+  url: { value: "", isTouched: false, error: "", validationRule: urlPath },
+};
+
 const CreateLinkForm: NextPage = () => {
-  const [form, setForm] = useState<Form>({
-    slug: { value: "", isTouched: false, error: "", validationRule: shortName },
-    url: { value: "", isTouched: false, error: "", validationRule: urlPath },
-  });
+  const [form, setForm] = useState<Form>(formInitial);
   // const url = window.location.origin.split("//")[1];
 
   const slugCheck = trpc.useQuery(["slugCheck", { slug: form.slug.value }], {
     refetchOnReconnect: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!form.slug.value,
+    enabled: !!form.slug.value && form.slug.isTouched,
   });
   const createSlug = trpc.useMutation(["createSlug"]);
 
   const input =
     "my-2 text-lg text-gray-650 px-3 bg-gray-850 border shadow-sm border-gray-750 placeholder-gray-650 focus:outline-none focus:border-lime-450 block w-full h-10";
 
-  // const slugInput = classNames(input, {
-  //   "border-red-500": slugCheck.isFetched && slugCheck.data!.used,
-  //   "text-red-500": slugCheck.isFetched && slugCheck.data!.used,
-  // });
+  console.log(form);
 
-  // if (createSlug.status === "success") {
-  //   // setForm({
-  //   //   slug: {
-  //   //     value: "",
-  //   //     isTouched: false,
-  //   //     error: "",
-  //   //     validationRule: shortName,
-  //   //   },
-  //   //   url: { value: "", isTouched: false, error: "", validationRule: urlPath },
-  //   // });
-  //   return (
-  //     <>
-  //       <div className="md:flex md:items-center md:gap-4 w-full md:w-[unset]">
-  //         <h1 className="font-normal text-xl mb-2 md:mb-0">{`${window.location.origin}/${form.slug}`}</h1>
-  //         <input
-  //           type="button"
-  //           value="Copy Link"
-  //           className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
-  //           onClick={() => {
-  //             copy(`${url}/${form.slug}`);
-  //           }}
-  //         />
-  //       </div>
-  //       <input
-  //         type="button"
-  //         value="Go back"
-  //         className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mr-auto md:mr-0"
-  //         // onClick={() => {
-  //         //   createSlug.reset();
-  //         //   setForm({ slug: "", url: "" });
-  //         // }}
-  //       />
-  //     </>
-  //   );
-  // }
+  if (createSlug.status === "success") {
+    return (
+      <>
+        <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
+        <button
+          type="button"
+          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mr-4"
+          onClick={() => {
+            copy(`https://shortn-ten.vercel.app/${form.slug.value}`);
+          }}
+        >
+          Copy link
+        </button>
+        <button
+          type="button"
+          className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75"
+          onClick={() => {
+            createSlug.reset();
+            setForm(formInitial);
+          }}
+        >
+          Go back
+        </button>
+      </>
+    );
+  }
   return (
     <form
       onSubmit={(e) => {
@@ -90,14 +79,17 @@ const CreateLinkForm: NextPage = () => {
           formObj.isTouched = true;
           setForm({ ...form, [key]: formObj });
         }
-        createSlug.mutate({ ...form });
-        console.log(createSlug.status);
+        if (!form.slug.error && !form.url.error) {
+          createSlug.mutate({ ...form });
+        }
       }}
       className="md:flex md:flex-col w-full"
     >
       <div>
         <div className="md:flex md:items-center md:gap-2">
-          <span className="font-normal text-xl whitespace-nowrap">shortn-ten.vercel.app/</span>
+          <span className="font-normal text-xl whitespace-nowrap">
+            shortn-ten.vercel.app/
+          </span>
           <input
             type="text"
             onBlur={() => {
@@ -148,7 +140,7 @@ const CreateLinkForm: NextPage = () => {
         </div>
         <span className="font-medium text-red-500 mt-1 md:-mt-1 h-[28px] md:h-6 block">
           {form.slug.isTouched && form.slug.error}
-          {form.slug.value !== "" && form.slug.isTouched && slugCheck.data?.used
+          {form.slug.value !== "" && slugCheck.data?.used
             ? "Slug already in use"
             : ""}
         </span>
