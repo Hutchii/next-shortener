@@ -182,6 +182,7 @@ const CreateLinkForm: NextPage = () => {
               form.url.isTouched &&
               "border-red-500 focus:border-red-500"
             }`}
+            value={form.url.value}
           />
         </div>
         <span className="font-medium text-red-500 h-6 block">
