@@ -20,15 +20,15 @@ export const appRouter = trpc
   })
   .mutation("createSlug", {
     input: z.object({
-      slug: z.string(),
-      url: z.string(),
+      slug: z.object({ value: z.string().min(1) }),
+      url: z.object({ value: z.string().min(1) }),
     }),
     async resolve({ input }) {
       try {
         await prisma.shortLink.create({
           data: {
-            slug: input.slug,
-            url: input.url,
+            slug: input.slug.value,
+            url: input.url.value,
           },
         });
       } catch (e) {
