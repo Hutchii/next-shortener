@@ -20,6 +20,19 @@ module.exports = {
       screens: {
         "3xl": "1920px",
       },
+      keyframes: {
+        "fade-in": {
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.4s ease-out both",
+      },
     },
   },
   plugins: [],

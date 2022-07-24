@@ -43,7 +43,7 @@ const CreateLinkForm: NextPage = () => {
 
   if (createSlug.status === "success") {
     return (
-      <>
+      <div className="animate-fade-in h-80 md:h-56">
         <h1 className="font-normal text-xl mb-5">{`https://shortn-ten.vercel.app/${form.slug.value}`}</h1>
         <button
           type="button"
@@ -67,7 +67,7 @@ const CreateLinkForm: NextPage = () => {
         >
           Copy link
         </button>
-      </>
+      </div>
     );
   }
 
@@ -85,7 +85,7 @@ const CreateLinkForm: NextPage = () => {
           createSlug.mutate({ ...form });
         }
       }}
-      className="md:flex md:flex-col w-full"
+      className="md:flex md:flex-col w-full animate-fade-in h-80 md:h-56"
     >
       <div>
         <div className="md:flex md:items-center md:gap-2">
@@ -118,7 +118,6 @@ const CreateLinkForm: NextPage = () => {
               "border-red-500 focus:border-red-500"
             }`}
             value={form.slug.value}
-            title="Only alphanumeric characters and hypens are allowed. No spaces."
           />
           <button
             type="button"
@@ -134,7 +133,7 @@ const CreateLinkForm: NextPage = () => {
                   error: form.slug.validationRule(slug),
                 },
               });
-              debounce(slugCheck.refetch, 100);
+              slugCheck.refetch;
             }}
           >
             Random
@@ -185,8 +184,8 @@ const CreateLinkForm: NextPage = () => {
         className="text-md bg-lime-450 px-5 font-semibold cursor-pointer text-gray-750 h-10 hover:bg-lime-550 transition ease-in duration-75 mt-2 md:mt-3 w-full"
         disabled={
           (slugCheck.isFetched && slugCheck.data!.used) ||
-          Boolean(form.slug.error) ||
-          Boolean(form.url.error)
+          (Boolean(form.slug.error) && form.slug.isTouched) ||
+          (Boolean(form.url.error)  && form.url.isTouched)
         }
       >
         Create
